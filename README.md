@@ -1,184 +1,135 @@
-# SysDesk - Sistema de Atendimento BR SISTEMAS
+# SysDesk - Sistema de Atendimento BR SISTEMAS (v2.0)
 
-![SysDesk Logo](https://via.placeholder.com/800x200/1976d2/ffffff?text=SysDesk+-+BR+SISTEMAS)
+![SysDesk Banner](https://via.placeholder.com/1024x220/1976d2/ffffff?text=SysDesk+-+BR+SISTEMAS)
 
-## 🎯 **Sobre o Projeto**
+O SysDesk é o hub interno de atendimento da BR SISTEMAS. Esta versão 2.0 traz documentação robusta, workflow de sprints gamificado e guias práticos para desenvolvimento, testes e deploy.
 
-O SysDesk é um sistema de atendimento interno desenvolvido para a BR SISTEMAS, com o objetivo de substituir soluções terceirizadas e criar um hub de aplicações centralizadas. Iniciando com um sistema de chat de suporte em tempo real.
+Links rápidos
+- Playbook Gamificado v2.0: docs/README.md
+- Repositório: https://github.com/BR-SISTEMAS/sysdesk
 
-### **Características Principais**
-- ✅ Sistema de autenticação completo (JWT)
-- ✅ Chat em tempo real (Socket.IO)
-- ✅ Numeração automática de tickets (BR-YYMM-NNNN)
-- ✅ Dashboard para Cliente, Suporte e Admin
-- ✅ Containerização completa com Docker
-- ✅ Banco de dados MariaDB
-- ✅ Interface moderna com Material-UI
+Sumário
+- Visão Geral
+- Stack Tecnológica
+- Estrutura do Projeto
+- Setup de Desenvolvimento
+- Docker / Containers
+- Banco de Dados (Prisma)
+- Testes
+- CI/CD
+- Workflow Git e Commits
+- Segurança
+- Contribuição
+- Suporte
 
-## 🚀 **Stack Tecnológica**
+Visão Geral
+- Objetivo: Internalizar o sistema de atendimento (chat de suporte e evoluções)
+- Status: Desenvolvimento contínuo
+- Pilares: Qualidade (testes), Documentação, Observabilidade, Segurança
 
-### **Frontend**
-- React 18 + TypeScript
-- Material-UI (MUI)
-- Redux Toolkit + RTK Query
-- Socket.IO Client
-- Vite
-- Styled Components
-
-### **Backend**
-- Node.js 18+ LTS
-- Express.js + TypeScript
-- Prisma ORM
-- MariaDB 10.11+
-- Socket.IO
-- JWT + bcrypt
-- Joi validation
-
-### **DevOps**
-- Docker + Docker Compose
-- Nginx (produção)
+Stack Tecnológica
+Frontend
+- React 18 + TypeScript, MUI, Styled Components
+- Redux Toolkit + RTK Query, React Router v6
+- Socket.IO Client, Vite
+Backend
+- Node.js 18 LTS, Express + TypeScript
+- Prisma ORM (MariaDB 10.11+)
+- JWT + bcrypt, Joi, Socket.IO
+- Swagger/OpenAPI
+DevOps
+- Docker + Docker Compose, Nginx
 - GitHub Actions (CI/CD)
 
-## 📋 **Requisitos**
-
-- [Docker](https://www.docker.com/) e Docker Compose
-- [Node.js 18+](https://nodejs.org/)
-- [Git](https://git-scm.com/)
-
-## 🛠️ **Setup de Desenvolvimento**
-
-### **1. Clone e Configuração Inicial**
-```bash
-git clone https://github.com/BR-SISTEMAS/sysdesk.git
-cd sysdesk
-git checkout develop
-```
-
-### **2. Configurar Variáveis de Ambiente**
-```bash
-cp .env.example .env
-# Edite o arquivo .env conforme necessário
-```
-
-### **3. Iniciar Containers**
-```bash
-# Iniciar apenas o banco (primeira vez)
-docker-compose up sysdesk-db -d
-
-# Aguardar banco estar pronto e instalar dependências
-cd backend && npm install
-npx prisma migrate dev
-npx prisma generate
-
-cd ../frontend && npm install
-
-# Iniciar todos os serviços
-cd ..
-docker-compose up -d
-```
-
-### **4. Acessar Aplicação**
-- **Frontend**: http://localhost:3000
-- **Backend API**: http://localhost:5000
-- **Database**: localhost:3306
-
-## 🎫 **Sistema de Tickets**
-
-O SysDesk utiliza um sistema de numeração única para tickets:
-
-**Formato**: `BR-YYMM-NNNN`
-- **BR**: Prefixo da empresa
-- **YY**: Ano (25 para 2025)
-- **MM**: Mês (01 a 12)
-- **NNNN**: Sequencial mensal (0001 a 9999)
-
-**Exemplos**:
-- `BR-2501-0001` - Primeiro ticket de Janeiro 2025
-- `BR-2501-0247` - Ticket #247 de Janeiro 2025
-- `BR-2502-0001` - Primeiro ticket de Fevereiro 2025
-
-## 📁 **Estrutura do Projeto**
-
+Estrutura do Projeto (alto nível)
 ```
 sysdesk/
-├── backend/           # API Node.js + Express
-├── frontend/          # React App
-├── database/          # Scripts SQL e seeds
-├── nginx/             # Configuração Nginx
-├── scripts/           # Scripts de automação
-├── docs/              # Documentação
-├── .github/           # GitHub Actions
-└── docker-compose.yml # Orquestração Docker
+├── .github/ (workflows, templates)
+├── backend/ (API Express + TS)
+├── frontend/ (React + Vite)
+├── database/ (scripts e seeds)
+├── nginx/ (config produção)
+├── docs/ (playbook e documentação)
+├── scripts/ (automação)
+├── docker-compose.yml
+└── README.md
 ```
 
-## 🔄 **Workflow de Desenvolvimento**
+Setup de Desenvolvimento
+1) Clonar e acessar o projeto
+- git clone https://github.com/BR-SISTEMAS/sysdesk.git
+- cd sysdesk
+- git checkout develop
+2) Variáveis de ambiente
+- cp .env.example .env
+- Edite a .env conforme necessário (NUNCA commitar segredos)
+3) Subir containers
+- docker-compose up -d
+4) Instalar dependências e preparar backend
+- cd backend && npm install
+- npx prisma generate
+- npx prisma migrate dev
+5) Instalar dependências frontend
+- cd ../frontend && npm install
+6) Acessos padrão
+- Frontend: http://localhost:3000
+- API: http://localhost:5000
+- DB: localhost:3306
 
-### **Branches**
-- `main` - Produção
-- `develop` - Desenvolvimento
-- `feature/*` - Novas funcionalidades
-- `hotfix/*` - Correções críticas
+Docker / Containers
+- docker-compose up -d: sobe banco, backend e frontend
+- docker-compose logs -f <service>: inspeciona logs
+- Em produção: docker-compose -f docker-compose.prod.yml up -d
 
-### **Padrão de Commits**
-```bash
-feat(auth): implementar registro de usuários
-fix(chat): corrigir mensagens duplicadas  
-docs(api): adicionar documentação Swagger
-chore(docker): configurar MariaDB
-```
+Banco de Dados (Prisma)
+- Migrations obrigatórias para qualquer mudança de schema
+- Comandos úteis:
+  - npx prisma generate
+  - npx prisma migrate dev
+  - npx prisma studio (se instalado)
 
-## 🧪 **Testes**
+Testes
+Backend
+- cd backend && npm test
+Frontend
+- cd frontend && npm test
+Política
+- Escrever testes antes (TDD quando possível)
+- Cobrir fluxos críticos (auth, tickets, chat)
 
-```bash
-# Backend
-cd backend && npm test
+CI/CD
+- PRs para develop disparam CI (lint/test)
+- Não mergear PR com CI vermelho
+- CD configurável via workflows em .github/workflows
 
-# Frontend
-cd frontend && npm test
-```
+Workflow Git e Commits
+- Branches: main (prod), develop (dev), feature/*, hotfix/*
+- Commits (exemplos):
+  - feat(auth): implementar fluxo de login com Joi
+  - fix(chat): corrigir duplicação de mensagens
+  - docs(api): adicionar endpoints de tickets no Swagger
+  - chore(docker): persistência de volume MariaDB
+- Sempre criar PR para develop com testes e documentação
 
-## 🚀 **Deploy**
+Segurança
+- Sem SQL direto – apenas Prisma
+- Validação e sanitização de inputs (Joi)
+- Rate limiting em endpoints críticos
+- HTTPS em produção, CORS/CSP adequados
+- Segredos via variáveis de ambiente (NUNCA em commits)
 
-```bash
-# Produção
-docker-compose -f docker-compose.prod.yml up -d
-```
+Contribuição
+1) Crie uma branch: git checkout -b feature/nome
+2) Commits atômicos: tipo(escopo): descrição
+3) Testes + docs atualizados
+4) Abra PR para develop usando o template
+5) Aguarde aprovação e CI verde
 
-## 📊 **Roadmap**
+Playbook Gamificado (Sprints)
+Para um passo a passo com Quests, Badges, DoD e Boss Fights por sprint, acesse:
+- docs/README.md (Playbook Gamificado v2.0)
 
-### **Fase 1: Fundação** *(Semanas 1-6)*
-- [x] Setup Docker + Git
-- [x] Sistema de autenticação
-- [ ] Sistema básico de tickets
-- [ ] Interface inicial
+Suporte
+- Issues: https://github.com/BR-SISTEMAS/sysdesk/issues
+- Contato: desenvolvimento@brsistemas.com.br
 
-### **Fase 2: Core Features** *(Semanas 7-10)*
-- [ ] Chat em tempo real
-- [ ] Dashboard de suporte
-- [ ] Fila de atendimento
-
-### **Fase 3: Avançado** *(Semanas 11-14)*
-- [ ] Dashboard admin
-- [ ] Sistema de convites
-- [ ] Métricas e relatórios
-
-## 🤝 **Contribuição**
-
-1. Fork o projeto
-2. Crie uma branch: `git checkout -b feature/nova-feature`
-3. Commit: `git commit -m 'feat: adicionar nova feature'`
-4. Push: `git push origin feature/nova-feature`
-5. Abra um Pull Request
-
-## 📄 **Licença**
-
-Este projeto é propriedade da **BR SISTEMAS** e está sob licença proprietária.
-
-## 📞 **Suporte**
-
-- **Email**: desenvolvimento@brsistemas.com.br
-- **Issues**: [GitHub Issues](https://github.com/BR-SISTEMAS/sysdesk/issues)
-
----
-
-**Desenvolvido com ❤️ pela equipe BR SISTEMAS**
