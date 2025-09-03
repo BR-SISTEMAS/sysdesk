@@ -22,11 +22,11 @@ export default defineConfig({
     host: true,
     proxy: {
       '/api': {
-        target: 'http://localhost:5000',
+        target: 'http://backend:5000',
         changeOrigin: true,
       },
       '/socket.io': {
-        target: 'ws://localhost:5000',
+        target: 'ws://backend:5000',
         ws: true,
         changeOrigin: true,
       },
