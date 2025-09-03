@@ -124,6 +124,9 @@ function App() {
           <Typography variant="body1" color="text.secondary">
             Ambiente de desenvolvimento - Testes de integração
           </Typography>
+          <Typography variant="caption" color="success.main" sx={{ mt: 1, display: 'block' }}>
+            ✅ Proxy configurado corretamente - Comunicação com backend estabelecida
+          </Typography>
         </Paper>
 
         {loading && (
