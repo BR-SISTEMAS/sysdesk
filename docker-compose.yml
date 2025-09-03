@@ -1,0 +1,77 @@
+version: '3.8'
+
+services:
+  sysdesk-db:
+    image: mariadb:10.11
+    container_name: sysdesk_mariadb
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: sysdesk_2024
+      MYSQL_DATABASE: sysdesk
+      MYSQL_USER: sysdesk_user
+      MYSQL_PASSWORD: sysdesk_pass
+    ports:
+      - "3306:3306"
+    volumes:
+      - sysdesk_db_data:/var/lib/mysql
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    networks:
+      - sysdesk-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  sysdesk-backend:
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: sysdesk_api
+    restart: unless-stopped
+    environment:
+      NODE_ENV: development
+      DATABASE_URL: mysql://sysdesk_user:sysdesk_pass@sysdesk-db:3306/sysdesk
+      JWT_SECRET: sysdesk_jwt_secret_br_sistemas_2024
+      JWT_REFRESH_SECRET: sysdesk_refresh_secret_br_sistemas_2024
+      PORT: 5000
+      CORS_ORIGIN: http://localhost:3000
+    ports:
+      - "5000:5000"
+    depends_on:
+      sysdesk-db:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    networks:
+      - sysdesk-network
+    command: npm run dev
+
+  sysdesk-frontend:
+    build: 
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: sysdesk_react
+    restart: unless-stopped
+    environment:
+      VITE_API_URL: http://localhost:5000
+      VITE_WS_URL: ws://localhost:5000
+      VITE_APP_NAME: SysDesk - BR SISTEMAS
+    ports:
+      - "3000:3000"
+    depends_on:
+      - sysdesk-backend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    networks:
+      - sysdesk-network
+    command: npm run dev
+
+volumes:
+  sysdesk_db_data:
+    driver: local
+
+networks:
+  sysdesk-network:
+    driver: bridge

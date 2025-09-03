@@ -1,0 +1,210 @@
+// SysDesk - Prisma Schema
+// Database schema for BR SISTEMAS support system
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// User model - Usuários do sistema (Cliente, Suporte, Admin)
+model User {
+  id           String    @id @default(uuid())
+  email        String    @unique
+  password     String
+  name         String
+  company      String?
+  phone        String?
+  role         Role      @default(CLIENT)
+  isActive     Boolean   @default(true)
+  isEmailVerified Boolean @default(false)
+  lastLogin    DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  // Relations
+  tickets       Ticket[]     @relation("UserTickets")
+  assignedTickets Ticket[]   @relation("AssignedTickets")
+  messages      Message[]
+  invites       Invite[]     @relation("InvitedBy")
+  invitedUsers  Invite[]     @relation("InvitedUser")
+
+  @@map("users")
+}
+
+// Ticket model - Tickets de suporte
+model Ticket {
+  id            String    @id @default(uuid())
+  ticketNumber  String    @unique // BR-YYMM-NNNN format
+  subject       String
+  description   String?   @db.Text
+  status        Status    @default(OPEN)
+  priority      Priority  @default(MEDIUM)
+  category      String?
+  tags          String?   // JSON array of tags
+  
+  // User relationships
+  userId        String
+  assignedToId  String?
+  
+  // Timestamps
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  closedAt      DateTime?
+  firstResponseAt DateTime?
+  lastActivityAt  DateTime?
+
+  // Metrics
+  responseTime  Int?      // Minutes until first response
+  resolutionTime Int?     // Minutes until resolution
+  satisfaction  Int?      // 1-5 rating
+
+  // Relations
+  user          User      @relation("UserTickets", fields: [userId], references: [id])
+  assignedTo    User?     @relation("AssignedTickets", fields: [assignedToId], references: [id])
+  messages      Message[]
+  attachments   Attachment[]
+
+  @@map("tickets")
+}
+
+// Message model - Mensagens do chat
+model Message {
+  id          String    @id @default(uuid())
+  content     String    @db.Text
+  messageType MessageType @default(TEXT)
+  isInternal  Boolean   @default(false) // Internal notes for support
+  
+  // Relations
+  ticketId    String
+  userId      String
+  ticket      Ticket    @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  user        User      @relation(fields: [userId], references: [id])
+  
+  // Timestamps
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  editedAt    DateTime?
+  
+  // Attachments
+  attachments Attachment[]
+
+  @@map("messages")
+}
+
+// Attachment model - Anexos de mensagens
+model Attachment {
+  id          String    @id @default(uuid())
+  filename    String
+  originalName String
+  mimeType    String
+  size        Int       // Size in bytes
+  url         String?   // URL if stored externally
+  
+  // Relations
+  messageId   String?
+  ticketId    String?
+  message     Message?  @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  ticket      Ticket?   @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  
+  createdAt   DateTime  @default(now())
+
+  @@map("attachments")
+}
+
+// Invite model - Sistema de convites
+model Invite {
+  id          String    @id @default(uuid())
+  email       String
+  role        Role      @default(CLIENT)
+  token       String    @unique
+  status      InviteStatus @default(PENDING)
+  
+  // Relations
+  invitedById String
+  acceptedById String?
+  invitedBy   User      @relation("InvitedBy", fields: [invitedById], references: [id])
+  acceptedBy  User?     @relation("InvitedUser", fields: [acceptedById], references: [id])
+  
+  // Timestamps
+  createdAt   DateTime  @default(now())
+  expiresAt   DateTime
+  acceptedAt  DateTime?
+
+  @@map("invites")
+}
+
+// Settings model - Configurações do sistema
+model Setting {
+  id          String    @id @default(uuid())
+  key         String    @unique
+  value       String    @db.Text
+  description String?
+  category    String?
+  isPublic    Boolean   @default(false) // If false, only admin can see
+  
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@map("settings")
+}
+
+// Activity log - Log de atividades
+model ActivityLog {
+  id          String    @id @default(uuid())
+  action      String    // "created_ticket", "sent_message", etc.
+  entity      String    // "ticket", "message", "user", etc.
+  entityId    String
+  userId      String?
+  metadata    Json?     // Additional data
+  ipAddress   String?
+  userAgent   String?
+  
+  createdAt   DateTime  @default(now())
+
+  @@map("activity_logs")
+}
+
+// Enums
+enum Role {
+  CLIENT
+  SUPPORT
+  ADMIN
+  SUPER_ADMIN
+}
+
+enum Status {
+  OPEN
+  IN_PROGRESS
+  WAITING_CLIENT
+  WAITING_SUPPORT
+  RESOLVED
+  CLOSED
+  CANCELLED
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+  CRITICAL
+}
+
+enum MessageType {
+  TEXT
+  FILE
+  IMAGE
+  SYSTEM
+  INTERNAL_NOTE
+}
+
+enum InviteStatus {
+  PENDING
+  ACCEPTED
+  EXPIRED
+  CANCELLED
+}
