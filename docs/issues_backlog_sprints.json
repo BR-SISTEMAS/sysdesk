@@ -1,0 +1,91 @@
+[
+  {
+    "title": "[Sprint 1] Quest 1.1: Docker Setup (Container Commander)",
+    "body": "## 🎯 Contexto\nPreparar o ambiente de containers com docker-compose, garantindo hot-reload para backend/frontend e persistência do banco.\n\n## ✅ Tarefas\n- [ ] Validar/ajustar docker-compose.yml com serviços: sysdesk-db, sysdesk-backend, sysdesk-frontend\n- [ ] Configurar volumes para hot-reload (backend, frontend)\n- [ ] Garantir persistência de dados do MariaDB via volume\n- [ ] Verificar logs de subida sem erros críticos\n\n## 📌 Critérios de Aceitação / DoD\n- [ ] `docker-compose up -d` executa sem erros\n- [ ] `docker ps` mostra 3 containers UP\n- [ ] Volumes funcionam e alterações refletem em dev\n- [ ] Documentação atualizada (README, docs/README.md)\n\n## 🧪 Testes\n- [ ] Smoke local: subir e acessar http://localhost:3000 e http://localhost:5000\n\n## 📚 Referências\n- Playbook Gamificado: docs/README.md (Sprint 1)\n\n## ⚠️ Riscos/Dependências\n- Versões do Docker/Compose"
+  },
+  {
+    "title": "[Sprint 1] Quest 1.2: Database Schema (Prisma + MariaDB)",
+    "body": "## 🎯 Contexto\nDefinir schema inicial (User, Ticket, Message; enums Role/Status/Priority) e aplicar migrations.\n\n## ✅ Tarefas\n- [ ] Definir backend/prisma/schema.prisma\n- [ ] `npx prisma generate`\n- [ ] `npx prisma migrate dev` (criar migrations)\n- [ ] (Opcional) Seeds iniciais\n\n## 📌 Critérios de Aceitação / DoD\n- [ ] Tabelas criadas e conexões OK via DATABASE_URL\n- [ ] Queries básicas funcionam\n- [ ] Documentação atualizada\n\n## 🧪 Testes\n- [ ] Testes unitários de acesso ao repositório/serviços\n\n## 📚 Referências\n- Playbook Gamificado: docs/README.md (Sprint 1)\n\n## ⚠️ Riscos/Dependências\n- Conectividade com sysdesk-db"
+  },
+  {
+    "title": "[Sprint 1] Quest 1.3: Estrutura do Projeto",
+    "body": "## 🎯 Contexto\nGarantir a estrutura de pastas conforme escopo e scripts mínimos de dev/build/test.\n\n## ✅ Tarefas\n- [ ] Validar estrutura backend/src/*, frontend/src/*, docs/, .github/*\n- [ ] Adicionar scripts npm mínimos (dev/build/test)\n- [ ] Ajustar .gitignore e .dockerignore\n\n## 📌 Critérios de Aceitação / DoD\n- [ ] Estrutura compatível com docs\n- [ ] Scripts executam sem erro\n\n## 🧪 Testes\n- [ ] `npm test` rodando (backend/frontend)\n\n## 📚 Referências\n- Playbook: docs/README.md (Sprint 1)"
+  },
+  {
+    "title": "[Sprint 1] Quest 1.4: CI Básico",
+    "body": "## 🎯 Contexto\nConfigurar GitHub Actions para lint e testes (backend e frontend) em PRs para develop.\n\n## ✅ Tarefas\n- [ ] Criar .github/workflows/ci.yml\n- [ ] Rodar lint/test em backend e frontend\n- [ ] Status do PR (checks)\n\n## 📌 Critérios de Aceitação / DoD\n- [ ] CI verde em PR de exemplo\n- [ ] Fails do lint/test quebram o PR\n\n## 🧪 Testes\n- [ ] PR de teste para develop\n\n## 📚 Referências\n- Playbook: docs/README.md (Sprint 1)"
+  },
+  {
+    "title": "[Sprint 2] Quest 2.1: Auth Backend",
+    "body": "## 🎯 Contexto\nImplementar endpoints de autenticação com JWT, validação (Joi) e bcrypt.\n\n## ✅ Tarefas\n- [ ] Endpoints: POST /api/auth/register, /login, /refresh, /logout; GET /api/auth/profile\n- [ ] Validar payloads com Joi\n- [ ] Gerar/validar JWT e (opcional) refresh token\n- [ ] Middleware de auth e role-based access\n- [ ] Documentar no Swagger\n\n## 📌 Critérios de Aceitação / DoD\n- [ ] Fluxo register->login->profile funcionando\n- [ ] Testes unit/integration verdes\n- [ ] Swagger atualizado\n\n## 🧪 Testes\n- [ ] Unit de services\n- [ ] Integração dos endpoints\n\n## 📚 Referências\n- Playbook: docs/README.md (Sprint 2)"
+  },
+  {
+    "title": "[Sprint 2] Quest 2.2: User Management Backend",
+    "body": "## 🎯 Contexto\nCRUD básico de usuários e permissões (roles).\n\n## ✅ Tarefas\n- [ ] Listar, obter, atualizar role, desativar usuário\n- [ ] Restringir por role no middleware\n- [ ] Testes e Swagger\n\n## 📌 Critérios de Aceitação / DoD\n- [ ] Operações CRUD com permissões corretas\n- [ ] Testes verdes\n\n## 🧪 Testes\n- [ ] Unit + integração\n\n## 📚 Referências\n- Playbook: docs/README.md (Sprint 2)"
+  },
+  {
+    "title": "[Sprint 2] Quest 2.3: Auth Frontend",
+    "body": "## 🎯 Contexto\nTelas de login/registro (MUI) e guards.\n\n## ✅ Tarefas\n- [ ] LoginPage e RegisterPage\n- [ ] authSlice + RTK Query (authApi)\n- [ ] ProtectedRoute e AuthGuard\n\n## 📌 Critérios de Aceitação / DoD\n- [ ] Fluxo login -> rota protegida -> logout\n- [ ] Validações visíveis e UX básica ok\n\n## 🧪 Testes\n- [ ] Componentes e integração leve\n\n## 📚 Referências\n- Playbook: docs/README.md (Sprint 2)"
+  },
+  {
+    "title": "[Sprint 3] Quest 3.1: Ticket Numbering (BR-YYMM-NNNN)",
+    "body": "## 🎯 Contexto\nGerar numeração automática mensal incremental para tickets.\n\n## ✅ Tarefas\n- [ ] Implementar utils/ticket-number.utils.ts (geração)\n- [ ] Query do último ticket do mês e incremento de sequência\n- [ ] Casos de borda ao virar mês\n\n## 📌 Critérios de Aceitação / DoD\n- [ ] Formato BR-YYMM-NNNN garantido\n- [ ] Testes unitários cobrindo bordas\n\n## 🧪 Testes\n- [ ] Unit do gerador\n\n## 📚 Referências\n- Playbook: docs/README.md (Sprint 3)"
+  },
+  {
+    "title": "[Sprint 3] Quest 3.2: Ticket CRUD + Status Machine",
+    "body": "## 🎯 Contexto\nCRUD de tickets com regras de transição de estado e permissões.\n\n## ✅ Tarefas\n- [ ] Endpoints: criar, listar, detalhar, atualizar status, fechar\n- [ ] Regras de transição e roles\n- [ ] Testes de integração\n\n## 📌 Critérios de Aceitação / DoD\n- [ ] Transições válidas e consistentes\n- [ ] Testes verdes\n\n## 🧪 Testes\n- [ ] Integração cobrindo transitions\n\n## 📚 Referências\n- Playbook: docs/README.md (Sprint 3)"
+  },
+  {
+    "title": "[Sprint 3] Quest 3.3: Client Dashboard (Frontend)",
+    "body": "## 🎯 Contexto\nUI cliente para listagem/criação/detalhes de tickets.\n\n## ✅ Tarefas\n- [ ] Páginas e componentes (TicketsPage, TicketList, TicketDetails)\n- [ ] Integração com RTK Query (ticketApi)\n- [ ] Estados de loading/erro\n\n## 📌 Critérios de Aceitação / DoD\n- [ ] UX funcional e responsiva\n- [ ] Testes de componentes\n\n## 🧪 Testes\n- [ ] Unit de componentes\n\n## 📚 Referências\n- Playbook: docs/README.md (Sprint 3)"
+  },
+  {
+    "title": "[Sprint 4] Quest 4.1: Socket.IO Setup",
+    "body": "## 🎯 Contexto\nConfigurar Socket.IO com salas por ticket (rooms).\n\n## ✅ Tarefas\n- [ ] backend/src/services/socket.service.ts com join-ticket, send-message, new-message\n- [ ] Persistir mensagens no banco\n\n## 📌 Critérios de Aceitação / DoD\n- [ ] Conexão estável; eventos fluem\n- [ ] Mensagens persistidas e entregues aos participantes\n\n## 🧪 Testes\n- [ ] e2e básico de fluxo feliz\n\n## 📚 Referências\n- Playbook: docs/README.md (Sprint 4)"
+  },
+  {
+    "title": "[Sprint 4] Quest 4.2: Chat UI",
+    "body": "## 🎯 Contexto\nConstruir UI de chat (ChatWindow, MessageList, MessageInput, TypingIndicator).\n\n## ✅ Tarefas\n- [ ] Componentização com MUI\n- [ ] Integração ao serviço de socket do frontend\n\n## 📌 Critérios de Aceitação / DoD\n- [ ] UI responsiva e estável\n- [ ] Sem mensagens duplicadas\n\n## 🧪 Testes\n- [ ] Unit de componentes\n\n## 📚 Referências\n- Playbook: docs/README.md (Sprint 4)"
+  },
+  {
+    "title": "[Sprint 4] Quest 4.3: Upload de Arquivos (básico)",
+    "body": "## 🎯 Contexto\nAdicionar upload básico de anexos (imagens) no chat.\n\n## ✅ Tarefas\n- [ ] Endpoint para upload e storage local (dev)\n- [ ] UI para anexar/visualizar\n\n## 📌 Critérios de Aceitação / DoD\n- [ ] Upload e renderização de imagens funcionam\n- [ ] Limites básicos (tamanho/tipo)\n\n## 🧪 Testes\n- [ ] Integração leve\n\n## 📚 Referências\n- Playbook: docs/README.md (Sprint 4)"
+  },
+  {
+    "title": "[Sprint 5] Quest 5.1: Support Dashboard",
+    "body": "## 🎯 Contexto\nInterface do time de suporte para visualizar tickets e priorizar.\n\n## ✅ Tarefas\n- [ ] Painel com listagem/filters/sorting\n- [ ] KPIs básicos\n\n## 📌 Critérios de Aceitação / DoD\n- [ ] Operacional e usável no dia a dia\n\n## 🧪 Testes\n- [ ] Unit de componentes\n\n## 📚 Referências\n- Playbook: docs/README.md (Sprint 5)"
+  },
+  {
+    "title": "[Sprint 5] Quest 5.2: Ticket Queue & Assignment",
+    "body": "## 🎯 Contexto\nImplementar fila de atendimento e atribuição de chamados.\n\n## ✅ Tarefas\n- [ ] Modelar ownership/locks\n- [ ] UI de fila e operação\n\n## 📌 Critérios de Aceitação / DoD\n- [ ] Atribuição consistente entre atendentes\n\n## 🧪 Testes\n- [ ] Integração de regras de lock\n\n## 📚 Referências\n- Playbook: docs/README.md (Sprint 5)"
+  },
+  {
+    "title": "[Sprint 5] Quest 5.3: Multichat",
+    "body": "## 🎯 Contexto\nPermitir múltiplas conversas simultâneas por atendente.\n\n## ✅ Tarefas\n- [ ] UI e estados para multichat\n- [ ] Performance e UX\n\n## 📌 Critérios de Aceitação / DoD\n- [ ] Troca de conversas sem perda de contexto\n\n## 🧪 Testes\n- [ ] Componentes e integração leve\n\n## 📚 Referências\n- Playbook: docs/README.md (Sprint 5)"
+  },
+  {
+    "title": "[Sprint 6] Quest 6.1: Admin Dashboard",
+    "body": "## 🎯 Contexto\nDashboard administrativo para gerenciar usuários, permissões e settings.\n\n## ✅ Tarefas\n- [ ] Páginas/admin e APIs correlatas\n- [ ] Controles de permissionamento\n\n## 📌 Critérios de Aceitação / DoD\n- [ ] Operações administrativas seguras e auditáveis\n\n## 🧪 Testes\n- [ ] Unit + integração\n\n## 📚 Referências\n- Playbook: docs/README.md (Sprint 6)"
+  },
+  {
+    "title": "[Sprint 6] Quest 6.2: Invite System",
+    "body": "## 🎯 Contexto\nSistema de convites por e-mail para novos usuários.\n\n## ✅ Tarefas\n- [ ] Envio de convites (SMTP)\n- [ ] Aceitação e definição de senha\n\n## 📌 Critérios de Aceitação / DoD\n- [ ] Convites entregues e fluxo completo\n\n## 🧪 Testes\n- [ ] Integração e validações de token\n\n## 📚 Referências\n- Playbook: docs/README.md (Sprint 6)"
+  },
+  {
+    "title": "[Sprint 6] Quest 6.3: Metrics & Reporting",
+    "body": "## 🎯 Contexto\nExibir métricas e relatórios/KPIs para clientes, suporte e administração.\n\n## ✅ Tarefas\n- [ ] Definir métricas mínimas\n- [ ] UI/Gráficos e endpoints\n\n## 📌 Critérios de Aceitação / DoD\n- [ ] KPIs visíveis e corretos\n\n## 🧪 Testes\n- [ ] Validações de agregações\n\n## 📚 Referências\n- Playbook: docs/README.md (Sprint 6)"
+  },
+  {
+    "title": "[Sprint 7] Quest 7.1: Performance & Error Handling",
+    "body": "## 🎯 Contexto\nMelhorias de performance e tratamento robusto de erros.\n\n## ✅ Tarefas\n- [ ] Otimizações no backend (ex.: consultas, caching, backpressure)\n- [ ] Error boundaries e UX de erro no frontend\n\n## 📌 Critérios de Aceitação / DoD\n- [ ] Menor latência percebida e logs claros\n\n## 🧪 Testes\n- [ ] Perf baselines e casos de erro\n\n## 📚 Referências\n- Playbook: docs/README.md (Sprint 7)"
+  },
+  {
+    "title": "[Sprint 7] Quest 7.2: Logging & Monitoring",
+    "body": "## 🎯 Contexto\nLogs estruturados e monitoramento/observabilidade.\n\n## ✅ Tarefas\n- [ ] Padronizar logs (correlação, níveis)\n- [ ] Integração com ferramenta de observabilidade (a definir)\n\n## 📌 Critérios de Aceitação / DoD\n- [ ] Tracing mínimo e dashboards úteis\n\n## 🧪 Testes\n- [ ] Verificar logs em cenários-chave\n\n## 📚 Referências\n- Playbook: docs/README.md (Sprint 7)"
+  },
+  {
+    "title": "[Sprint 7] Quest 7.3: Production Config",
+    "body": "## 🎯 Contexto\nConfiguração de produção (Nginx, HTTPS, headers de segurança, rate limiting).\n\n## ✅ Tarefas\n- [ ] Nginx com HTTPS e headers (CSP/CORS)\n- [ ] Rate limiting em endpoints críticos\n- [ ] docker-compose.prod.yml validado\n\n## 📌 Critérios de Aceitação / DoD\n- [ ] Build de produção pronto e validado\n\n## 🧪 Testes\n- [ ] Smoke em prod/staging\n\n## 📚 Referências\n- Playbook: docs/README.md (Sprint 7)"
+  }
+]
+
